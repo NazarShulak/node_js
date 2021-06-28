@@ -1,2 +1,6 @@
 # Project exclude paths
 /node_modules/
+/.idea/
+.eslintrc.js
+package-lock.json
+package.json
