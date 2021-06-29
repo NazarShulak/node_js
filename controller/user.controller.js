@@ -1,12 +1,18 @@
 const { UserModel } = require('../dataBase');
+const {
+    constants: {
+        USER_UPDATED,
+        USER_DELETED,
+        USER_CREATED
+    }
+} = require('../constants');
 
 module.exports = {
     getUsers: async (req, res, next) => {
         try {
-            const users = await UserModel.find({});
+            const users = await UserModel.find();
 
             res.json(users);
-            next();
         } catch (e) {
             next(e);
         }
@@ -17,18 +23,15 @@ module.exports = {
             const user = await UserModel.find({ _id: userId });
 
             res.json(user);
-            next();
         } catch (e) {
             next(e);
         }
     },
     createUser: async (req, res, next) => {
         try {
-            const { userId } = req.params;
-            await UserModel.findByIdAndUpdate({ _id: userId }, req.body);
+            await UserModel.create(req.body);
 
-            res.json('user is successfully created');
-            next();
+            res.json(USER_CREATED);
         } catch (e) {
             next(e);
         }
@@ -39,8 +42,7 @@ module.exports = {
 
             await UserModel.findByIdAndRemove({ _id: userId });
 
-            res.json('user is successfully deleted');
-            next();
+            res.json(USER_DELETED);
         } catch (e) {
             next(e);
         }
@@ -50,8 +52,7 @@ module.exports = {
             const { userId } = req.params;
             await UserModel.findOneAndUpdate({ _id: userId }, req.body);
 
-            res.json('user info is successfully updated');
-            next();
+            res.json(USER_UPDATED);
         } catch (e) {
             next(e);
         }

@@ -1,7 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 
-const { constants, errorCodesEnum } = require('./constants');
+const {
+    constants: {
+        ROUTE_NOT_FOUND,
+        PORT
+    },
+    errorCodesEnum
+} = require('./constants');
 const { userRouter } = require('./router');
 
 const app = express();
@@ -15,24 +21,24 @@ app.use('/users', userRouter);
 app.use('*', _notFoundHandler);
 app.use(_hadleErrors);
 
-app.listen(constants.PORT, () => {
+app.listen(PORT, () => {
     console.log('App listen 8000');
 });
 
 // eslint-disable-next-line no-unused-vars
 function _hadleErrors(err, req, res, next) {
     res
-        .status(err.status)
+        .status(err.status || 500)
         .json({
             message: err.message || 'Unknown error',
-            customCode: err.code || 0
+            customCode: err.customCode || 0
         });
 }
 
 function _notFoundHandler(err, req, res, next) {
     next({
         status: err.status || errorCodesEnum.NOT_FOUND,
-        message: err.message || 'Rout not fond'
+        message: err.message || ROUTE_NOT_FOUND
     });
 }
 

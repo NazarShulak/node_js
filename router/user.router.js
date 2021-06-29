@@ -1,11 +1,26 @@
-const router = require('express').Router();
-const { userController } = require('../controller');
-const { userMiddleware } = require('../middlewares');
+const router = require('express')
+    .Router();
+const {
+    userController: {
+        createUser,
+        deleteUserById,
+        getUserById,
+        getUsers,
+        updateUserById
+    }
+} = require('../controller');
+const {
+    userMiddleware: {
+        checkIfUserIdValid,
+        checkIfUserExist,
+        checkIfUserRegistered
+    }
+} = require('../middlewares');
 
-router.get('/', userController.getUsers);
-router.get('/:userId', userMiddleware.checkIfUserExist, userController.getUserById);
-router.post('/', userMiddleware.checkIfUserRegistered, userController.createUser);
-router.delete('/:userId', userMiddleware.checkIfUserExist, userController.deleteUserById);
-router.patch('/:userId', userMiddleware.checkIfUserExist, userController.updateUserById);
+router.get('/', getUsers);
+router.get('/:userId', checkIfUserIdValid, checkIfUserExist, getUserById);
+router.post('/', checkIfUserRegistered, createUser);
+router.delete('/:userId', checkIfUserIdValid, checkIfUserExist, deleteUserById);
+router.patch('/:userId', checkIfUserIdValid, checkIfUserExist, updateUserById);
 
 module.exports = router;

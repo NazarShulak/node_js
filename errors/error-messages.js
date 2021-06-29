@@ -1,11 +1,16 @@
 module.exports = {
     RECORD_NOT_FOUND: {
         message: 'Record not found',
-        code: 4040
+        customCode: 4040
     },
 
     USER_ALREADY_LOGGED: {
-        message: 'wUser is already logged in',
-        code: 4000
+        message: 'User is already logged in',
+        customCode: 4090
+    },
+
+    NOT_VALID_USER_ID: {
+        message: 'UserId is not valid',
+        customCode: 4091
     }
 };

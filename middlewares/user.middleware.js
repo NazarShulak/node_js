@@ -1,12 +1,16 @@
 const { UserModel } = require('../dataBase');
 const {
     ErrorHandler,
-    errorMessages
+    errorMessages: {
+        USER_ALREADY_LOGGED,
+        RECORD_NOT_FOUND,
+        NOT_VALID_USER_ID
+    }
 } = require('../errors');
 const {
     errorCodesEnum: {
         NOT_FOUND,
-        BAD_REQUEST
+        CONFLICT
     }
 } = require('../constants');
 
@@ -14,10 +18,10 @@ module.exports = {
     checkIfUserExist: async (req, res, next) => {
         try {
             const { userId } = req.params;
-            const user = await UserModel.find({ _id: userId });
+            const user = await UserModel.findById(userId);
 
             if (!user) {
-                throw new ErrorHandler(NOT_FOUND, errorMessages.RECORD_NOT_FOUND.message, errorMessages.RECORD_NOT_FOUND.code);
+                throw new ErrorHandler(NOT_FOUND, RECORD_NOT_FOUND.message, RECORD_NOT_FOUND.customCode);
             }
 
             req.user = user;
@@ -32,9 +36,20 @@ module.exports = {
             const userToCheck = users.find((user) => user.login === req.body.login);
 
             if (userToCheck) {
-                throw new ErrorHandler(BAD_REQUEST,
-                    errorMessages.USER_ALREADY_LOGGED.message,
-                    errorMessages.USER_ALREADY_LOGGED.code);
+                throw new ErrorHandler(CONFLICT, USER_ALREADY_LOGGED.message, USER_ALREADY_LOGGED.customCode);
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+    checkIfUserIdValid: (req, res, next) => {
+        try {
+            const { userId } = req.params;
+
+            if (userId.length !== 24) {
+                throw new ErrorHandler(CONFLICT, NOT_VALID_USER_ID.message, NOT_VALID_USER_ID.customCode);
             }
 
             next();
