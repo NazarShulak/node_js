@@ -1,4 +1,4 @@
-import { UserModel } from '../dataBase';
+const { UserModel } = require('../dataBase');
 
 module.exports = {
     getUsers: async (req, res, next) => {

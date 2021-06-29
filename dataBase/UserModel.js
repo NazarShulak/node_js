@@ -22,4 +22,4 @@ const userSchema = new Schema({
     }
 });
 
-module.exports = model(dataBaseTablesEnum.USER, userSchema);
+module.exports = model(dataBaseTablesEnum.USERS, userSchema);
