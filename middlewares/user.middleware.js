@@ -14,7 +14,7 @@ module.exports = {
         const users = await userService.getAllUsers();
         const findUser = users.find((user) => user.login === req.body.login);
         if (findUser) {
-            throw new Error('this user is already login');
+            throw new Error('this user is already logged ');
         }
         next();
     }
