@@ -7,7 +7,7 @@ module.exports = {
     checkIfUserExist: async (req, res, next) => {
         try {
             const { login } = req.body;
-            const user = await UserModel.findOne({ login }).select('+password');
+            const user = await UserModel.findOne({ login });
 
             if (!user) {
                 throw new ErrorHandler(BAD_REQUEST, RECORD_NOT_FOUND.message, RECORD_NOT_FOUND.customCode);
@@ -22,13 +22,10 @@ module.exports = {
 
     checkIfPasswordValid: async (req, res, next) => {
         try {
-            const { password } = req.body;
+            const { body: { password }, user: { password: hashedPassword } } = req;
 
-            const validPassword = await passwordHasher.compare(password, req.user.password);
+            await passwordHasher.compare(password, hashedPassword);
 
-            if (!validPassword) {
-                throw new ErrorHandler(WRONG_LOGIN_PASSWORD.message, WRONG_LOGIN_PASSWORD.customCode);
-            }
             next();
         } catch (e) {
             next(e);

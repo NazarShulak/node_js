@@ -12,5 +12,10 @@ module.exports = {
     NOT_VALID_USER_ID: {
         message: 'UserId is not valid',
         customCode: 4091
+    },
+
+    WRONG_LOGIN_PASSWORD: {
+        message: 'Wrong login or password',
+        customCode: 4092
     }
 };

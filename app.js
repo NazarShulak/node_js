@@ -6,9 +6,9 @@ const {
         ROUTE_NOT_FOUND,
         PORT
     },
-    errorCodesEnum
+    responseCodesEnum
 } = require('./constants');
-const { userRouter } = require('./router');
+const { userRouter, authRouter } = require('./router');
 
 const app = express();
 
@@ -17,6 +17,7 @@ _mongooseConnector();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('*', _notFoundHandler);
 app.use(_hadleErrors);
@@ -28,16 +29,16 @@ app.listen(PORT, () => {
 // eslint-disable-next-line no-unused-vars
 function _hadleErrors(err, req, res, next) {
     res
-        .status(err.status || 500)
-        .json({
-            message: err.message || 'Unknown error',
-            customCode: err.customCode || 0
-        });
+      .status(err.status || 500)
+      .json({
+          message: err.message || 'Unknown error',
+          customCode: err.customCode || 0
+      });
 }
 
 function _notFoundHandler(err, req, res, next) {
     next({
-        status: err.status || errorCodesEnum.NOT_FOUND,
+        status: err.status || responseCodesEnum.NOT_FOUND,
         message: err.message || ROUTE_NOT_FOUND
     });
 }

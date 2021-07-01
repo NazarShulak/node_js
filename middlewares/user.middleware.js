@@ -8,7 +8,7 @@ const {
     }
 } = require('../errors');
 const {
-    errorCodesEnum: {
+    responseCodesEnum: {
         NOT_FOUND,
         CONFLICT
     }
@@ -32,10 +32,11 @@ module.exports = {
     },
     checkIfUserRegistered: async (req, res, next) => {
         try {
-            const users = await UserModel.find({});
-            const userToCheck = users.find((user) => user.login === req.body.login);
+            const { login } = req.body;
 
-            if (userToCheck) {
+            const user = await UserModel.findOne({ login });
+
+            if (user) {
                 throw new ErrorHandler(CONFLICT, USER_ALREADY_LOGGED.message, USER_ALREADY_LOGGED.customCode);
             }
 
