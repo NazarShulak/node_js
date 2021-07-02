@@ -57,7 +57,7 @@ module.exports = {
             const { userId } = req.params;
 
             if (userId.length !== ID_LENGTH) {
-                throw new ErrorHandler(BAD_REQUEST, NOT_VALID_USER_ID.message, NOT_VALID_USER_ID.customCode);
+                throw new ErrorHandler(CONFLICT, NOT_VALID_USER_ID.message, NOT_VALID_USER_ID.customCode);
             }
 
             next();

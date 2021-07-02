@@ -48,7 +48,7 @@ module.exports = {
         try {
             const { userId } = req.params;
 
-            await UserModel.findByIdAndRemove({ _id: userId });
+            await UserModel.findByIdAndRemove({ _id: userId }, { useFindAndModify: false });
 
             res.status(DELETED).json(USER_DELETED);
         } catch (e) {
@@ -59,7 +59,7 @@ module.exports = {
     updateUserById: async (req, res, next) => {
         try {
             const { userId } = req.params;
-            await UserModel.findOneAndUpdate({ _id: userId }, req.body);
+            await UserModel.findOneAndUpdate({ _id: userId }, req.body, { useFindAndModify: false });
 
             res.status(UPDATED).json(USER_UPDATED);
         } catch (e) {
