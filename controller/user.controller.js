@@ -4,7 +4,8 @@ const {
         USER_UPDATED,
         USER_DELETED,
         USER_CREATED
-    }
+    },
+    responseCodesEnum: { CREATED, DELETED, UPDATED }
 } = require('../constants');
 const { passwordHasher } = require('../helpers');
 
@@ -37,7 +38,7 @@ module.exports = {
 
             await UserModel.create({ password: hashedPassword, ...other });
 
-            res.json(USER_CREATED);
+            res.status(CREATED).json(USER_CREATED);
         } catch (e) {
             next(e);
         }
@@ -49,7 +50,7 @@ module.exports = {
 
             await UserModel.findByIdAndRemove({ _id: userId });
 
-            res.json(USER_DELETED);
+            res.status(DELETED).json(USER_DELETED);
         } catch (e) {
             next(e);
         }
@@ -60,7 +61,7 @@ module.exports = {
             const { userId } = req.params;
             await UserModel.findOneAndUpdate({ _id: userId }, req.body);
 
-            res.json(USER_UPDATED);
+            res.status(UPDATED).json(USER_UPDATED);
         } catch (e) {
             next(e);
         }
