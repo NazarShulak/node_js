@@ -4,15 +4,21 @@ const {
     errorMessages: {
         USER_ALREADY_LOGGED,
         RECORD_NOT_FOUND,
-        NOT_VALID_USER_ID
+        NOT_VALID_USER_ID,
+        NOT_VALID_DATA
     }
 } = require('../errors');
+
 const {
     responseCodesEnum: {
         NOT_FOUND,
-        CONFLICT
-    }
+        CONFLICT,
+        BAD_REQUEST
+    },
+    constants: { ID_LENGTH }
 } = require('../constants');
+
+const { userValidator: { checkUserBody } } = require('../validators');
 
 module.exports = {
     checkIfUserExist: async (req, res, next) => {
@@ -30,6 +36,7 @@ module.exports = {
             next(e);
         }
     },
+
     checkIfUserRegistered: async (req, res, next) => {
         try {
             const { login } = req.body;
@@ -45,12 +52,27 @@ module.exports = {
             next(e);
         }
     },
+
     checkIfUserIdValid: (req, res, next) => {
         try {
             const { userId } = req.params;
 
-            if (userId.length !== 24) {
+            if (userId.length !== ID_LENGTH) {
                 throw new ErrorHandler(CONFLICT, NOT_VALID_USER_ID.message, NOT_VALID_USER_ID.customCode);
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkUserBodyValidity: (req, res, next) => {
+        try {
+            const { error } = checkUserBody.validate(req.body);
+
+            if (error) {
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message, NOT_VALID_DATA.customCode);
             }
 
             next();

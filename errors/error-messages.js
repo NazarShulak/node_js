@@ -17,5 +17,10 @@ module.exports = {
     WRONG_LOGIN_PASSWORD: {
         message: 'Wrong login or password',
         customCode: 4092
+    },
+
+    NOT_VALID_DATA: {
+        message: 'Not valid data',
+        customCode: 4000
     }
 };

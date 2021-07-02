@@ -1,5 +1,5 @@
 const router = require('express')
-    .Router();
+  .Router();
 const {
     userController: {
         createUser,
@@ -13,14 +13,15 @@ const {
     userMiddleware: {
         checkIfUserIdValid,
         checkIfUserExist,
-        checkIfUserRegistered
+        checkIfUserRegistered,
+        checkUserBodyValidity
     }
 } = require('../middlewares');
 
 router.get('/', getUsers);
 router.get('/:userId', checkIfUserIdValid, checkIfUserExist, getUserById);
-router.post('/', checkIfUserRegistered, createUser);
+router.post('/', checkIfUserRegistered, checkUserBodyValidity, createUser);
 router.delete('/:userId', checkIfUserIdValid, checkIfUserExist, deleteUserById);
-router.patch('/:userId', checkIfUserIdValid, checkIfUserExist, updateUserById);
+router.patch('/:userId', checkIfUserIdValid, checkIfUserExist, checkUserBodyValidity, updateUserById);
 
 module.exports = router;

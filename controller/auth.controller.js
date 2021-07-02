@@ -1,6 +1,5 @@
 module.exports = {
-    // eslint-disable-next-line no-unused-vars
-    login: (req, res, next) => {
+    login: (req, res) => {
         res.json(req.user);
     }
 };
