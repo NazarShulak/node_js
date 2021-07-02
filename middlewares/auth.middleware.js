@@ -2,7 +2,7 @@ const { responseCodesEnum: { NOT_FOUND, BAD_REQUEST } } = require('../constants'
 const { UserModel } = require('../dataBase');
 const { ErrorHandler, errorMessages: { WRONG_LOGIN_PASSWORD, NOT_VALID_DATA } } = require('../errors');
 const { passwordHasher } = require('../helpers');
-const { authValidator: { logInUser } } = require('../validators');
+const { authValidator: { loginUser } } = require('../validators');
 
 module.exports = {
     checkUserLogin: async (req, res, next) => {
@@ -35,7 +35,7 @@ module.exports = {
 
     checkUserBody: (req, res, next) => {
         try {
-            const { error } = logInUser.validate(req.body);
+            const { error } = loginUser.validate(req.body);
 
             if (error) {
                 throw new ErrorHandler(BAD_REQUEST, NOT_VALID_DATA.message, NOT_VALID_DATA.customCode);

@@ -1,14 +1,6 @@
 const { UserModel } = require('../dataBase');
-const {
-    ErrorHandler,
-    errorMessages: {
-        USER_ALREADY_LOGGED,
-        RECORD_NOT_FOUND,
-        NOT_VALID_USER_ID,
-        NOT_VALID_DATA
-    }
-} = require('../errors');
 
+const { userValidator: { checkUserBody } } = require('../validators');
 const {
     responseCodesEnum: {
         NOT_FOUND,
@@ -18,7 +10,15 @@ const {
     constants: { ID_LENGTH }
 } = require('../constants');
 
-const { userValidator: { checkUserBody } } = require('../validators');
+const {
+    ErrorHandler,
+    errorMessages: {
+        USER_ALREADY_LOGGED,
+        RECORD_NOT_FOUND,
+        NOT_VALID_USER_ID,
+        NOT_VALID_DATA
+    }
+} = require('../errors');
 
 module.exports = {
     checkIfUserExist: async (req, res, next) => {
@@ -40,7 +40,6 @@ module.exports = {
     checkIfUserRegistered: async (req, res, next) => {
         try {
             const { login } = req.body;
-
             const user = await UserModel.findOne({ login });
 
             if (user) {

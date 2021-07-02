@@ -18,6 +18,7 @@ module.exports = {
             next(e);
         }
     },
+
     getUserById: async (req, res, next) => {
         try {
             const { userId } = req.params;
@@ -28,6 +29,7 @@ module.exports = {
             next(e);
         }
     },
+
     createUser: async (req, res, next) => {
         try {
             const { password, ...other } = req.body;
@@ -40,6 +42,7 @@ module.exports = {
             next(e);
         }
     },
+
     deleteUserById: async (req, res, next) => {
         try {
             const { userId } = req.params;
@@ -51,6 +54,7 @@ module.exports = {
             next(e);
         }
     },
+
     updateUserById: async (req, res, next) => {
         try {
             const { userId } = req.params;
