@@ -1,6 +1,6 @@
 const { UserModel } = require('../dataBase');
 
-const { userValidator: { checkUserBody } } = require('../validators');
+const { userValidator: { createUser, updateUser } } = require('../validators');
 const {
     responseCodesEnum: {
         NOT_FOUND,
@@ -66,9 +66,23 @@ module.exports = {
         }
     },
 
-    checkUserBodyValidity: (req, res, next) => {
+    checkUserForUpdate: (req, res, next) => {
         try {
-            const { error } = checkUserBody.validate(req.body);
+            const { error } = updateUser.validate(req.body);
+
+            if (error) {
+                throw new ErrorHandler(BAD_REQUEST, error.details[0].message, NOT_VALID_DATA.customCode);
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkUserForCreation: (req, res, next) => {
+        try {
+            const { error } = createUser.validate(req.body);
 
             if (error) {
                 throw new ErrorHandler(BAD_REQUEST, error.details[0].message, NOT_VALID_DATA.customCode);
