@@ -30,11 +30,9 @@ module.exports = {
             .min(16)
             .max(100),
         login: Joi.string()
-            .required()
             .regex(EMAIL_REGEXP),
         password: Joi.string()
             .min(5)
             .max(25)
-            .regex(PASSWORD_REGEXP)
     })
 };
