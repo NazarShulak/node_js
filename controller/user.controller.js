@@ -7,7 +7,7 @@ const {
     },
     responseCodesEnum: { CREATED, DELETED, UPDATED }
 } = require('../constants');
-const { passwordHasher } = require('../helpers');
+const { passwordHasher: passwordService } = require('../services');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -34,7 +34,7 @@ module.exports = {
     createUser: async (req, res, next) => {
         try {
             const { password, ...other } = req.body;
-            const hashedPassword = await passwordHasher.hash(password);
+            const hashedPassword = await passwordService.hash(password);
 
             await UserModel.create({ password: hashedPassword, ...other });
 

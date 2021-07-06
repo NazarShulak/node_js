@@ -1,21 +1,11 @@
-const { responseCodesEnum: { CONFLICT } } = require('../constants');
 const { OAuthModel } = require('../dataBase');
-const { ErrorHandler, errorMessages: { WRONG_LOGIN_PASSWORD } } = require('../errors');
-const { passwordHasher } = require('../helpers');
 const { authServices } = require('../services');
+const { responseCodesEnum: { DELETED }, constants: { USER_LOGOUT } } = require('../constants');
 
 module.exports = {
     login: async (req, res, next) => {
         try {
-            if (!req.user) {
-                throw new ErrorHandler(CONFLICT, WRONG_LOGIN_PASSWORD.message, WRONG_LOGIN_PASSWORD.customCode);
-            }
-
-            const { password: hashedPassword, _id } = req.user;
-            const { password } = req.body;
-
-            await passwordHasher.compare(password, hashedPassword);
-
+            const { _id } = req.user;
             const tokenPair = authServices.generateTokens();
 
             await OAuthModel.create({ ...tokenPair, user: _id });
@@ -26,10 +16,21 @@ module.exports = {
         }
     },
 
-    logout: (req, res, next) => {
+    logout: async (req, res, next) => {
         try {
-            res.json(req.user);
+            const { accessToken } = req.user;
 
+            await OAuthModel.remove({ accessToken });
+
+            res.status(DELETED).json(USER_LOGOUT);
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    refresh: (req, res, next) => {
+        try {
             next();
         } catch (e) {
             next(e);

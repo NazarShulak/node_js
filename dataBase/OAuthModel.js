@@ -8,21 +8,23 @@ const oAuthSchema = new Schema({
         required: true,
         ref: dataBaseTablesEnum.USERS
     },
+
     accessToken: {
         type: String,
         required: true
     },
+
     refreshToken: {
         type: String,
         required: true
     }
 }, { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } });
 
-oAuthSchema.pre('find', () => {
+oAuthSchema.pre('find', function() {
     this.populate('user');
 });
 
-oAuthSchema.pre('findOne', () => {
+oAuthSchema.pre('findOne', function() {
     this.populate('user');
 });
 
