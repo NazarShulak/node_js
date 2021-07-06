@@ -7,3 +7,4 @@ mongoose.connect(DB_URL, {
 });
 
 module.exports.UserModel = require('./UserModel');
+module.exports.OAuthModel = require('./OAuthModel');
