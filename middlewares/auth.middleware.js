@@ -63,7 +63,7 @@ module.exports = {
             const userObject = await OAuthModel.findOne({ accessToken: token });
 
             if (!userObject) {
-                throw new ErrorHandler(UNAUTHORIZED_BAD_TOKEN, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
+                throw new ErrorHandler(UNAUTHORIZED, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
             }
 
             req.user = userObject;
@@ -79,7 +79,7 @@ module.exports = {
             const refreshToken = req.get(AUTHORIZATION);
 
             if (!refreshToken) {
-                throw new ErrorHandler(UNAUTHORIZED_BAD_TOKEN, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
+                throw new ErrorHandler(UNAUTHORIZED, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
             }
 
             await authServices.verifyToken(refreshToken, 'refresh');
@@ -87,7 +87,7 @@ module.exports = {
             const userObject = await OAuthModel.findOne({ refreshToken });
 
             if (!userObject) {
-                throw new ErrorHandler(UNAUTHORIZED_BAD_TOKEN, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
+                throw new ErrorHandler(UNAUTHORIZED, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
             }
 
             req.user = userObject.user;
