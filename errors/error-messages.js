@@ -22,5 +22,10 @@ module.exports = {
     NOT_VALID_DATA: {
         message: 'Not valid data',
         customCode: 4000
+    },
+
+    UNAUTHORIZED_BAD_TOKEN: {
+        message: 'Not authorized',
+        customCode: 4010
     }
 };

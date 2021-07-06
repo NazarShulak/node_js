@@ -1,9 +1,11 @@
-const { responseCodesEnum: { NOT_FOUND, BAD_REQUEST }, constants: { AUTHORIZATION } } = require('../constants');
+const {
+    responseCodesEnum: { NOT_FOUND, BAD_REQUEST, UNAUTHORIZED },
+    constants: { AUTHORIZATION }
+} = require('../constants');
 const { UserModel, OAuthModel } = require('../dataBase');
-const { ErrorHandler, errorMessages: { WRONG_LOGIN_PASSWORD, NOT_VALID_DATA } } = require('../errors');
-const { passwordHasher } = require('../services');
+const { ErrorHandler, errorMessages: { WRONG_LOGIN_PASSWORD, NOT_VALID_DATA, UNAUTHORIZED_BAD_TOKEN } } = require('../errors');
+const { passwordServices, authServices } = require('../services');
 const { authValidator: { loginUser } } = require('../validators');
-const { authServices } = require('../services');
 
 module.exports = {
     checkUserLogin: async (req, res, next) => {
@@ -26,7 +28,7 @@ module.exports = {
         try {
             const { body: { password }, user: { password: hashedPassword } } = req;
 
-            await passwordHasher.compare(password, hashedPassword);
+            await passwordServices.compare(password, hashedPassword);
 
             next();
         } catch (e) {
@@ -61,10 +63,34 @@ module.exports = {
             const userObject = await OAuthModel.findOne({ accessToken: token });
 
             if (!userObject) {
-                throw new ErrorHandler(400, 'Error', 4000);
+                throw new ErrorHandler(UNAUTHORIZED_BAD_TOKEN, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
             }
 
             req.user = userObject;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    refreshTokenCheck: async (req, res, next) => {
+        try {
+            const refreshToken = req.get(AUTHORIZATION);
+
+            if (!refreshToken) {
+                throw new ErrorHandler(400, 'Error', 4000);
+            }
+
+            await authServices.verifyToken(refreshToken, 'refresh');
+
+            const userObject = await OAuthModel.findOne({ refreshToken });
+
+            if (!userObject) {
+                throw new ErrorHandler(UNAUTHORIZED_BAD_TOKEN, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
+            }
+
+            req.user = userObject.user;
 
             next();
         } catch (e) {

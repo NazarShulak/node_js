@@ -5,9 +5,9 @@ const {
         USER_DELETED,
         USER_CREATED
     },
-    responseCodesEnum: { CREATED, DELETED, UPDATED }
+    responseCodesEnum: { CREATED, NO_CONTENT, UPDATED }
 } = require('../constants');
-const { passwordHasher: passwordService } = require('../services');
+const { passwordServices } = require('../services');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -34,8 +34,8 @@ module.exports = {
     createUser: async (req, res, next) => {
         try {
             const { password, ...other } = req.body;
-            const hashedPassword = await passwordService.hash(password);
 
+            const hashedPassword = await passwordServices.hash(password);
             await UserModel.create({ password: hashedPassword, ...other });
 
             res.status(CREATED).json(USER_CREATED);
@@ -50,7 +50,7 @@ module.exports = {
 
             await UserModel.findByIdAndRemove({ _id: userId }, { useFindAndModify: false });
 
-            res.status(DELETED).json(USER_DELETED);
+            res.status(NO_CONTENT).json(USER_DELETED);
         } catch (e) {
             next(e);
         }

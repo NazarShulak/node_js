@@ -1,6 +1,7 @@
+const { constants: { AUTHORIZATION } } = require('../constants');
 const { OAuthModel } = require('../dataBase');
 const { authServices } = require('../services');
-const { responseCodesEnum: { DELETED }, constants: { USER_LOGOUT } } = require('../constants');
+const { responseCodesEnum: { NO_CONTENT }, constants: { USER_LOGOUT } } = require('../constants');
 
 module.exports = {
     login: async (req, res, next) => {
@@ -22,16 +23,22 @@ module.exports = {
 
             await OAuthModel.remove({ accessToken });
 
-            res.status(DELETED).json(USER_LOGOUT);
+            res.status(NO_CONTENT).json(USER_LOGOUT);
             next();
         } catch (e) {
             next(e);
         }
     },
 
-    refresh: (req, res, next) => {
+    refresh: async (req, res, next) => {
         try {
-            next();
+            const refreshToken = req.get(AUTHORIZATION);
+            const { user } = req;
+            const tokenPair = authServices.generateTokens();
+
+            await OAuthModel.findOneAndUpdate({ refreshToken }, { ...tokenPair });
+
+            res.json({ ...tokenPair, user });
         } catch (e) {
             next(e);
         }

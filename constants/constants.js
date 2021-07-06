@@ -4,7 +4,7 @@ module.exports = {
     ACCESS_TOKEN: process.env.ACCESS_TOKEN,
     REFRESH_TOKEN: process.env.REFRESH_TOKEN,
     PORT: process.env.PORT || 8000,
-    DB_URL: process.env.DB_URL,
+    DB_URL: `mongodb+srv://${process.env.DB_LOGIN}:${process.env.DB_PASSWORD}@test.ulyb3.mongodb.net/Users?retryWrites=true&w=majority`,
     ID_LENGTH: 24,
     USER_UPDATED: 'user info is successfully updated',
     USER_DELETED: 'user is successfully deleted',
@@ -12,5 +12,6 @@ module.exports = {
     USER_CREATED: 'user is successfully created',
     ROUTE_NOT_FOUND: 'Rout not found',
     UNKNOWN_ERROR: 'Unknown error',
-    AUTHORIZATION: 'Authorization'
+    AUTHORIZATION: 'Authorization',
+    WRONG_TOKEN: 'Wrong token'
 };
