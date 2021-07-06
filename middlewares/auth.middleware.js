@@ -79,7 +79,7 @@ module.exports = {
             const refreshToken = req.get(AUTHORIZATION);
 
             if (!refreshToken) {
-                throw new ErrorHandler(400, 'Error', 4000);
+                throw new ErrorHandler(UNAUTHORIZED_BAD_TOKEN, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
             }
 
             await authServices.verifyToken(refreshToken, 'refresh');
