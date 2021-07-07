@@ -16,13 +16,17 @@ const {
         checkIfUserRegistered,
         checkUserForUpdate,
         checkUserForCreation
+    },
+
+    authMiddleware: {
+        accessTokenCheck
     }
 } = require('../middlewares');
 
 router.get('/', getUsers);
-router.get('/:userId', checkIfUserIdValid, checkIfUserExist, getUserById);
+router.get('/:userId', accessTokenCheck, checkIfUserIdValid, checkIfUserExist, getUserById);
 router.post('/', checkIfUserRegistered, checkUserForCreation, createUser);
-router.delete('/:userId', checkIfUserIdValid, checkIfUserExist, deleteUserById);
-router.patch('/:userId', checkIfUserIdValid, checkIfUserExist, checkUserForUpdate, updateUserById);
+router.delete('/:userId', accessTokenCheck, checkIfUserIdValid, checkIfUserExist, deleteUserById);
+router.patch('/:userId', accessTokenCheck, checkIfUserIdValid, checkIfUserExist, checkUserForUpdate, updateUserById);
 
 module.exports = router;

@@ -70,7 +70,7 @@ module.exports = {
             }
 
             req.user = userObject;
-
+            
             next();
         } catch (e) {
             next(e);
