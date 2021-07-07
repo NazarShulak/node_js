@@ -13,5 +13,9 @@ module.exports = {
     ROUTE_NOT_FOUND: 'Rout not found',
     UNKNOWN_ERROR: 'Unknown error',
     AUTHORIZATION: 'Authorization',
-    WRONG_TOKEN: 'Wrong token'
+    WRONG_TOKEN: 'Wrong token',
+    REFRESH: 'refresh',
+    ACCESS: 'access',
+    ACCESS_TOKEN_LIFETIME: '10m',
+    REFRESH_TOKEN_LIFETIME: '30d'
 };

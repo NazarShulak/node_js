@@ -1,9 +1,12 @@
 const {
     responseCodesEnum: { NOT_FOUND, BAD_REQUEST, UNAUTHORIZED },
-    constants: { AUTHORIZATION }
+    constants: { AUTHORIZATION, REFRESH }
 } = require('../constants');
 const { UserModel, OAuthModel } = require('../dataBase');
-const { ErrorHandler, errorMessages: { WRONG_LOGIN_PASSWORD, NOT_VALID_DATA, UNAUTHORIZED_BAD_TOKEN } } = require('../errors');
+const {
+    ErrorHandler,
+    errorMessages: { WRONG_LOGIN_PASSWORD, NOT_VALID_DATA, UNAUTHORIZED_BAD_TOKEN }
+} = require('../errors');
 const { passwordServices, authServices } = require('../services');
 const { authValidator: { loginUser } } = require('../validators');
 
@@ -55,7 +58,7 @@ module.exports = {
             const token = req.get(AUTHORIZATION);
 
             if (!token) {
-                throw new ErrorHandler(400, 'Error', 4000);
+                throw new ErrorHandler(UNAUTHORIZED, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
             }
 
             await authServices.verifyToken(token);
@@ -82,7 +85,7 @@ module.exports = {
                 throw new ErrorHandler(UNAUTHORIZED, UNAUTHORIZED_BAD_TOKEN.message, UNAUTHORIZED_BAD_TOKEN.customCode);
             }
 
-            await authServices.verifyToken(refreshToken, 'refresh');
+            await authServices.verifyToken(refreshToken, REFRESH);
 
             const userObject = await OAuthModel.findOne({ refreshToken });
 
