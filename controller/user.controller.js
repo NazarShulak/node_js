@@ -36,11 +36,10 @@ module.exports = {
     createUser: async (req, res, next) => {
         try {
             const { password, ...other } = req.body;
-            const { name, email } = req.params;
             const hashedPassword = await passwordServices.hash(password);
 
             await UserModel.create({ password: hashedPassword, ...other });
-            await mailService.sendMail(email, WELCOME, { userName: name });
+            await mailService.sendMail(req.body.login, WELCOME, { userName: req.body.name });
 
             res.status(CREATED).json(USER_CREATED);
         } catch (e) {
@@ -50,10 +49,13 @@ module.exports = {
 
     deleteUserById: async (req, res, next) => {
         try {
-            const { userId, email } = req.params;
-            const user = await UserModel.findByIdAndRemove({ _id: userId }, { useFindAndModify: false });
+            const { userId } = req.params;
+            const {
+                login: email,
+                name
+            } = await UserModel.findByIdAndRemove({ _id: userId }, { useFindAndModify: false });
 
-            await mailService.sendMail(email, DELETE, { userName: user.name });
+            await mailService.sendMail(email, DELETE, { userName: name });
 
             res.status(NO_CONTENT).json(USER_DELETED);
         } catch (e) {
@@ -63,8 +65,8 @@ module.exports = {
 
     updateUserById: async (req, res, next) => {
         try {
-            const { userId, email } = req.params;
-            const { name } = req.body;
+            const { userId } = req.params;
+            const { name, login: email } = req.body;
 
             await UserModel.findOneAndUpdate({ _id: userId }, req.body, { useFindAndModify: false });
             await mailService.sendMail(email, UPDATE, { userName: name });

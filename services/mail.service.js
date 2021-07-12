@@ -15,7 +15,7 @@ const templateParser = new EmailTemplates({
     }
 });
 
-const transport = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: SYSTEM_MAIL,
@@ -33,7 +33,7 @@ const sendMail = async (userMail, action, context) => {
 
         const html = await templateParser.render(template.templateName, context);
 
-        return transport.sendMail({
+        return transporter.sendMail({
             from: 'No reply',
             to: userMail,
             subject: template.subject,

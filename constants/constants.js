@@ -3,7 +3,7 @@ require('dotenv').config();
 module.exports = {
     ACCESS: 'access',
     ACCESS_TOKEN: process.env.ACCESS_TOKEN,
-    ACCESS_TOKEN_LIFETIME: '10m',
+    ACCESS_TOKEN_LIFETIME: '40m',
     AUTHORIZATION: 'Authorization',
     DB_URL: `mongodb+srv://${process.env.DB_LOGIN}:${process.env.DB_PASSWORD}@test.ulyb3.mongodb.net/Users?retryWrites=true&w=majority`,
     REFRESH_TOKEN: process.env.REFRESH_TOKEN,
