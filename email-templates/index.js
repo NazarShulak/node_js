@@ -1,6 +1,6 @@
 const {
     mailActionsEnum: {
-        WELCOME, DELETE, UPDATE, VERIFY
+        WELCOME, DELETE, UPDATE
     }
 } = require('../constants');
 
@@ -16,9 +16,5 @@ module.exports = {
     [UPDATE]: {
         templateName: 'update-account',
         subject: 'Account successful updated'
-    },
-    [VERIFY]: {
-        templateName: 'activate-account',
-        subject: 'Activate account'
     }
 };
