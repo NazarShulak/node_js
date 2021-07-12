@@ -4,6 +4,11 @@ module.exports = {
         customCode: 4040
     },
 
+    WRONG_TEMPLATE: {
+        message: 'Wrong template',
+        code: 4041
+    },
+
     USER_ALREADY_LOGGED: {
         message: 'User is already logged in',
         customCode: 4090
@@ -28,4 +33,5 @@ module.exports = {
         message: 'Not authorized',
         customCode: 4010
     }
+
 };

@@ -1,4 +1,6 @@
+const { mailActionsEnum: { DELETE, WELCOME, UPDATE } } = require('../constants');
 const { UserModel } = require('../dataBase');
+const { mailService } = require('../services');
 const {
     constants: {
         USER_UPDATED,
@@ -34,9 +36,11 @@ module.exports = {
     createUser: async (req, res, next) => {
         try {
             const { password, ...other } = req.body;
-
+            const { name, email } = req.params;
             const hashedPassword = await passwordServices.hash(password);
+
             await UserModel.create({ password: hashedPassword, ...other });
+            await mailService.sendMail(email, WELCOME, { userName: name });
 
             res.status(CREATED).json(USER_CREATED);
         } catch (e) {
@@ -46,9 +50,10 @@ module.exports = {
 
     deleteUserById: async (req, res, next) => {
         try {
-            const { userId } = req.params;
+            const { userId, email } = req.params;
+            const user = await UserModel.findByIdAndRemove({ _id: userId }, { useFindAndModify: false });
 
-            await UserModel.findByIdAndRemove({ _id: userId }, { useFindAndModify: false });
+            await mailService.sendMail(email, DELETE, { userName: user.name });
 
             res.status(NO_CONTENT).json(USER_DELETED);
         } catch (e) {
@@ -58,8 +63,11 @@ module.exports = {
 
     updateUserById: async (req, res, next) => {
         try {
-            const { userId } = req.params;
+            const { userId, email } = req.params;
+            const { name } = req.body;
+
             await UserModel.findOneAndUpdate({ _id: userId }, req.body, { useFindAndModify: false });
+            await mailService.sendMail(email, UPDATE, { userName: name });
 
             res.status(UPDATED).json(USER_UPDATED);
         } catch (e) {
