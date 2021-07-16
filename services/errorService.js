@@ -5,7 +5,7 @@ const {
 
 module.exports = {
     // eslint-disable-next-line no-unused-vars
-    _hadleErrors: (err, req, res, next) => {
+    _handleErrors: (err, req, res, next) => {
         res.status(err.status || INTERNAL_ERROR).json({
             message: err.message || UNKNOWN_ERROR,
             customCode: err.customCode || 0

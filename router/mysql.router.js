@@ -1,7 +1,10 @@
 const router = require('express').Router();
 
-const { mysqlController: { rt } } = require('../controller');
+const {mysqlController: {getById, createUser, removeUser, getStudents}} = require('../controller');
 
-router.get('/', rt);
+router.get('/', getStudents);
+router.get('/:id', getById);
+router.post('/', createUser);
+router.delete('/:id', removeUser);
 
 module.exports = router;
