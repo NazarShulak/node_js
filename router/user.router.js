@@ -9,6 +9,7 @@ const {
         updateUserById
     }
 } = require('../controller');
+
 const {
     userMiddleware: {
         checkIfUserIdValid,

@@ -1,15 +1,11 @@
-const { mailActionsEnum: { DELETE, WELCOME, UPDATE } } = require('../constants');
-const { UserModel } = require('../dataBase');
-const { mailService } = require('../services');
 const {
-    constants: {
-        USER_UPDATED,
-        USER_DELETED,
-        USER_CREATED
-    },
-    responseCodesEnum: { CREATED, NO_CONTENT, UPDATED }
+    constants: { USER_UPDATED, USER_DELETED },
+    responseCodesEnum: { CREATED, NO_CONTENT, UPDATED },
+    mailActionsEnum: { DELETE, WELCOME, UPDATE }
 } = require('../constants');
-const { passwordServices } = require('../services');
+const { UserModel } = require('../dataBase');
+const { userHelper, fileHelper: { _photoDirBuilder } } = require('../helpers');
+const { mailService, passwordServices } = require('../services');
 
 module.exports = {
     getUsers: async (req, res, next) => {
@@ -36,12 +32,24 @@ module.exports = {
     createUser: async (req, res, next) => {
         try {
             const { password, ...other } = req.body;
-            const hashedPassword = await passwordServices.hash(password);
+            const { avatar } = req;
 
-            await UserModel.create({ password: hashedPassword, ...other });
+            const hashedPassword = await passwordServices.hash(password);
+            const user = await UserModel.create({ password: hashedPassword, ...other });
+
+            const { _id } = user;
+
+            if (avatar) {
+                const { finalPath, photoPath } = await _photoDirBuilder(avatar.name, _id, 'users');
+                await avatar.mv(finalPath);
+                await UserModel.updateOne({ _id }, { avatar: photoPath });
+            }
+
+            const normalizedUser = userHelper.userNormalizer(user.toJSON());
+
             await mailService.sendMail(req.body.login, WELCOME, { userName: req.body.name });
 
-            res.status(CREATED).json(USER_CREATED);
+            res.status(CREATED).json(normalizedUser);
         } catch (e) {
             next(e);
         }
