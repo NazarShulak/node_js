@@ -1,6 +1,6 @@
 const { Sequelize } = require('sequelize');
 
-module.exports.sequelize = new Sequelize('users', 'root', 'Shulak5858613213119095', {
+module.exports.sequelize = new Sequelize('users', 'root', 'root', {
     dialect: 'mysql',
     logging: false
 });
